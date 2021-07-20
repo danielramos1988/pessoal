@@ -1,0 +1,199 @@
+networks:
+  default:
+    ipam:
+      config:
+      - subnet: 172.18.0.0/16
+      driver: default
+services:
+  hub-auth-api:
+    environment:
+      APP_TRILHA_BASE: atenalms.com.br
+      APP_TRILHA_CHANGE_PASSWORD: app/api/user/account/changeStudentPassword
+      APP_TRILHA_LOGIN: app/api/User/Account/AuthenticateStudentLogin
+      APP_TRILHA_RESET_PASSWORD: app/api/user/account/PasswordReminderStudent
+      APP_TRILHA_USER_AUTHENTICATION: /app/api/user/authentication/sso/saml2/getUrlSAMLRequest
+      ASPNETCORE_ENVIRONMENT: Development
+      CLIENT_ID_GO_DIGITAL: JViowVJFZDGiFeIlZYbIzOQHe6GMqu73
+      CLIENT_ID_SAAS: bXB23a4OySPEgPFArK7h4hKuo636konu
+      CLIENT_SECRET_GO_DIGITAL: WuNHPGHI6De5Hu0DY35EOLGPzAWWCH4h
+      CLIENT_SECRET_SAAS: HnjufAQ4AZyGCr57YyAbTNhptTsnjZ6B
+      DEBUG_MODE: '2'
+      ENABLE_GET_LOGS: "true"
+      ENVIROMENT_ID: '1'
+      GO_DIGITAL_EK: DJsdd2j89w
+      HELPERCAST_SQL: Server=10.106.200.4,2354;Database=AtenaHelperCast;User ID=AtenaHelperCast;Password=at3nr0a;
+      HUB_CONNECTION_STRING: Data Source=20.44.80.20,2354;Initial Catalog=Hub;User
+        Id=hub_dev_apps;Password=f7%LmF6kRdoa
+      KONG_HUB_CONSUMER: https://apimddev.edtech.com.br/hub/consumer
+      KONG_HUB_CONSUMER_API_KEY: GHeecdu6l66j3RGEBKkoSlNfkOUcULa1
+      KONG_INTERNAL_API: https://apimddev.edtech.com.br
+      KONG_OAUTH_PATH: /hub-token/oauth2/token
+      NEWRELIC_GUIDS: MjQ1MTc3N3xBUE18QVBQTElDQVRJT058NjMwMDM5ODk3
+      NEWRELIC_KEY: 491cd0e6b03e5905b85dbda57ea8cdc42972e09d
+      NEWRELIC_SERVICE: helpercast-api
+      NEWRELIC_URL: https://log-api.newrelic.com/log/v1
+      OAUTH2_GRANT_TYPE: password
+      OAUTH2_PROVISION_KEY: H9V68MfE3L5jZA95qRIrwjfsGKil3Bz6
+      SAAS_ATENA_LMS_LOGIN_BASE: https://lmsed.atenalms.com.br/api/main
+      SAAS_ATENA_LMS_USER_LOGON: security/user/logonv2
+      SAAS_CONNSTRING_PLACEHOLDER: Data Source={SOURCE};Initial Catalog={CATALOG};User
+        Id={USER};Password={PWD}
+      SAAS_DB_PASSWORD: g9TbbbbJIxJpfh#D%ZWYOqo#VczBLT#!
+      SAAS_DB_USER: usr_saas_dev
+    image: prdedctraz01.azurecr.io/hub-auth-api:1.0.14091
+  hub-config-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DEBUG_MODE: '2'
+      ELASTICSEARCH: '#{ELASTICSEARCH}'
+      ELASTIC_URL: '#{ELASTIC_URL}'
+      ENABLE_GET_LOGS: "true"
+      ENVIROMENT_ID: '1'
+      HELPERCAST_SQL: Server=10.106.200.4,2354;Database=AtenaHelperCast;User ID=AtenaHelperCast;Password=at3nr0a;
+      HUB_CONNECTION_STRING: Data Source=20.44.80.20,2354;Initial Catalog=Hub;User
+        Id=hub_dev_apps;Password=f7%LmF6kRdoa
+      NEWRELIC_GUIDS: MjQ1MTc3N3xBUE18QVBQTElDQVRJT058NjMwMDM5ODk3
+      NEWRELIC_KEY: 491cd0e6b03e5905b85dbda57ea8cdc42972e09d
+      NEWRELIC_SERVICE: helpercast-api
+      NEWRELIC_URL: https://log-api.newrelic.com/log/v1
+      SAAS_APP_TRILHAS_BASE_URL: atenalms.com.br
+      SAAS_APP_TRILHAS_GROUPS: app/api/training/activityGroup/getStudentGroupsClustered
+      SAAS_CONNECTION_STRING: Data Source={0};Initial Catalog={1};User Id=usr_saas_dev;Password=g9TbbbbJIxJpfh#D%ZWYOqo#VczBLT#!
+    image: prdedctraz01.azurecr.io/hub-config-api:1.0.14268
+  hub-etl:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DEFAULT_DB_ETL_TIMEOUT: '1500'
+      HANGFIRE_CONNECTION_STRING: Data Source=#{HANGFIRE_DB_SERVER};Initial Catalog=Hub;User
+        Id=#{HANGFIRE_DB_USER};Password=#{HANGFIRE_DB_PASS}
+      HANGFIRE_RETRY: '2'
+      HUB_CONNECTION_STRING: Data Source=#{HUB_DB_SERVER};Initial Catalog=Hub;User
+        Id=#{HUB_DB_USER};Password=#{HUB_DB_PASS}
+      JOB_SAAS_PLAT_USERS_EXEC_INTERVAL: 0 0 */12 ? * *
+      NEWRELIC_GUIDS: MjQ1MTc3N3xBUE18QVBQTElDQVRJT058NjMwMDM5ODk3
+      NEWRELIC_KEY: 491cd0e6b03e5905b85dbda57ea8cdc42972e09d
+      NEWRELIC_SERVICE: helpercast-api
+      NEWRELIC_URL: https://log-api.newrelic.com/log/v1
+      SAAS_DB_PASS: '#{SAAS_DB_PASS}'
+      SAAS_DB_USER: '#{SAAS_DB_USER}'
+      SAAS_DEFAULT_CONNECTION_STRING: Data Source=#{SAAS_DB_SERVER};Initial Catalog=WACP2005;User
+        Id=#{SAAS_DB_USER};Password=#{SAAS_DB_PASS}
+    image: prdedctraz01.azurecr.io/hub-etl:1.0.14024
+  hub-training-api:
+    environment:
+      APP_TRAIL_GET_TRAIL_ACTIVITY: '#{APP_TRAIL_GET_TRAIL_ACTIVITY}'
+      APP_TRAIL_GET_TRAIL_ACTIVITY_DETAILS: '#{APP_TRAIL_GET_TRAIL_ACTIVITY_DETAILS}'
+      APP_TRAIL_GET_TRAIL_DETAILS: '#{APP_TRAIL_GET_TRAIL_DETAILS}'
+      APP_TRILHA_BASE: atenalms.com.br
+      APP_TRILHA_GET_COURSE_DETAIL: '#{APP_TRILHA_GET_COURSE_DETAIL}'
+      APP_TRILHA_GET_COURSE_STRUCTURE: '#{APP_TRILHA_GET_COURSE_STRUCTURE}'
+      APP_TRILHA_GET_LAST_ACCESS_TRAININGS: '#{APP_TRILHA_GET_LAST_ACCESS_TRAININGS}'
+      APP_TRILHA_GET_RECENT_TOPICS: '#{APP_TRILHA_GET_RECENT_TOPICS}'
+      APP_TRILHA_GET_TRAININGS: '#{APP_TRILHA_GET_TRAININGS}'
+      ASPNETCORE_ENVIRONMENT: Development
+      DEBUG_MODE: '2'
+      ENTERPRISE_SAAS_BASE_URL: '#{ENTERPRISE_SAAS_BASE_URL}'
+      ENTERPRISE_SAAS_GET_CLASSES: '#{ENTERPRISE_SAAS_GET_CLASSES}'
+      ENVIROMENT_ID: '1'
+      HELPERCAST_SQL: Server=10.106.200.4,2354;Database=AtenaHelperCast;User ID=AtenaHelperCast;Password=at3nr0a;
+      NEWRELIC_GUIDS: MjQ1MTc3N3xBUE18QVBQTElDQVRJT058NjMwMDM5ODk3
+      NEWRELIC_KEY: 491cd0e6b03e5905b85dbda57ea8cdc42972e09d
+      NEWRELIC_SERVICE: helpercast-api
+      NEWRELIC_URL: https://log-api.newrelic.com/log/v1
+    image: prdedctraz01.azurecr.io/hub-trainings-api:1.0.12613
+  hub-trainings-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DEBUG_MODE: '2'
+      ENABLE_GET_LOGS: "true"
+      ENVIROMENT_ID: '1'
+      HELPERCAST_SQL: Server=10.106.200.4,2354;Database=AtenaHelperCast;User ID=AtenaHelperCast;Password=at3nr0a;
+      HUB_CONNECTION_STRING: Data Source=20.44.80.20,2354;Initial Catalog=Hub;User
+        Id=hub_dev_apps;Password=f7%LmF6kRdoa
+      HUB_DB_PASS: f7%LmF6kRdoa
+      HUB_DB_SERVER: 20.44.80.20,2354
+      HUB_DB_USER: hub_dev_apps
+      NEWRELIC_GUIDS: MjQ1MTc3N3xBUE18QVBQTElDQVRJT058NjMwMDM5ODk3
+      NEWRELIC_KEY: 491cd0e6b03e5905b85dbda57ea8cdc42972e09d
+      NEWRELIC_SERVICE: helpercast-api
+      NEWRELIC_URL: https://log-api.newrelic.com/log/v1
+      SAAS_APP_TRILHAS_BASE_URL: atenalms.com.br
+      SAAS_APP_TRILHAS_GET_COURSE_DETAIL: app/api/training/legacyCourses/getCourseDetail
+      SAAS_APP_TRILHAS_GET_LAST_ACCESS_TRAININGS: app/api/training/training/lastCoursesAccessByStudent
+      SAAS_APP_TRILHAS_GET_RECENT_TOPICS: '#{SAAS_APP_TRILHAS_GET_RECENT_TOPICS}'
+      SAAS_APP_TRILHAS_GET_STUDENT_CERTIFICATES: app/api/training/training/GetStudentCertificates
+      SAAS_APP_TRILHAS_GET_STUDENT_HISTORY: app/api/user/history/GetStudentHistory
+      SAAS_APP_TRILHAS_GET_TRAIL_ACTIVITY: app/api/training/trail/getTrailActivities
+      SAAS_APP_TRILHAS_GET_TRAIL_ACTIVITY_DETAILS: app/api/training/activity/getActivityDetail
+      SAAS_APP_TRILHAS_GET_TRAIL_DETAILS: app/api/training/trail/getTrailDetail
+      SAAS_APP_TRILHAS_GET_TRAININGS: app/api/training/training/getTrainings
+      SAAS_APP_TRILHA_SUBSCRIBE_TRAIL: app/api/training/activityCollectionForStudents/saveRegistration
+      SAAS_APP_TRILHA_SUBSCRIBE_TRAINING: app/api/training/legacyCourses/savePreInscriptionClass
+      SAAS_APP_TRILHA_UNSUBSCRIBE_TRAIL: app/api/training/activityCollectionForStudents/deleteRegistration
+      SAAS_APP_TRILHA_UNSUBSCRIBE_TRAINING: app/api/training/legacyCourses/cancelPreInscriptionClass
+      SAAS_CLIENT_ENTERPRISE_BASE_URL: lmsed.atenalms.com.br/api/main
+      SAAS_ENTERPRISE_BASE_URL: lmsed.atenalms.com.br/main/api
+      SAAS_ENTERPRISE_GET_CLASSES: training/classroom/getClassByLegacyId
+      SAAS_ENTERPRISE_GET_COURSE_STRUCTURE: training/classroom/getStructureByClass
+      SAAS_ENTERPRISE_GET_CURRENT_USER: '#{SAAS_ENTERPRISE_GET_CURRENT_USER}'
+      SAAS_ENTERPRISE_GET_RECENT_TOPICS: training/topicLegacy/listRecent
+    image: prdedctraz01.azurecr.io/hub-trainings-api:1.0.14225
+  kong:
+    environment:
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_PG_DATABASE: kong213
+      KONG_PG_HOST: kong-postgres
+      KONG_PG_PASSWORD: kong
+      KONG_PG_USER: kong
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_SSL_CERT: /etc/kong/ssl/server.crt
+      KONG_SSL_CERT_KEY: /etc/kong/ssl/server.key
+      KONG_SSL_CIPHER_SUITE: old
+    extra_hosts:
+      dev-e-aceite-nao-tem-content-dedicado-para-bb: 1.2.3.4
+      static-content-dev.edtech.com.br-tem-endereco-publico-para-ips-limitados-inclusive-o-docker-dev: 1.2.3.4
+    image: kong:2.2
+    ports:
+    - published: 7946
+      target: 7946
+    - protocol: udp
+      published: 7946
+      target: 7946
+    - published: 80
+      target: 8000
+    - published: 8001
+      target: 8001
+    - published: 443
+      target: 8443
+    volumes:
+    - /var/www/apps/apps/kong/volumes/nginx-kong.conf:/etc/kong/kong.conf:rw
+    - /var/www/apps/apps/kong/volumes/server.dev.crt:/etc/kong/ssl/server.crt:rw
+    - /var/www/apps/apps/kong/volumes/server.dev.key:/etc/kong/ssl/server.key:rw
+  kong-postgres:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: kong
+      POSTGRES_PASSWORD: kong
+      POSTGRES_USER: kong
+    image: postgres:9.6
+    ports:
+    - published: 5432
+      target: 5432
+    restart: always
+    volumes:
+    - /var/www/apps/data/databases/kong-postgres:/var/lib/postgresql/data/pgdata:rw
+  konga:
+    image: pantsel/konga:latest
+    ports:
+    - published: 1337
+      target: 1337
+    restart: always
+version: '3.4'
+volumes:
+  data01:
+    driver: local
+  mongodb_master_data:
+    driver: local
+
